@@ -198,6 +198,7 @@
         <button class="nav-btn" data-target="page2">Page 2</button>
         <button class="nav-btn" data-target="page3">Page 3</button>
         <button class="nav-btn" data-target="page4">Page 4</button>
+        <button class="nav-btn" data-target="page5">Page 5</button>
     </nav>
 
     <section class="screen active" id="page1">
@@ -258,8 +259,30 @@ Aaj bas itna kehna hai ki meri zindagi tumhare bina adhuri si lagti hai. Main ha
             <div class="controls">
                 <button class="btn" id="playPause">Play</button>
                 <button class="btn" id="muteUnmute">Mute</button>
+                <button class="btn" id="toBirthday">Celebrate</button>
                 <button class="btn" id="replay">Replay</button>
             </div>
+        </div>
+    </section>
+
+    <section class="screen" id="page5">
+        <div class="card feature-wrap" style="text-align:center; gap:24px;">
+            <h1 class="title">Happy Birthday, Love ❤️🎂</h1>
+            <p style="font-size:1.1rem; color:var(--accent-dark); line-height:1.8; max-width:720px; margin:auto;">
+                
+Meri pyari Prinjal❤️
+Aaj ka din mere liye bahut khaas hai, kyunki aaj us insaan ka birthday hai jo meri zindagi ki sabse khoobsurat wajah hai.✨ Tumhari muskaan meri khushi hai aur tumhara saath meri taqat❤️.Main dua karta hoon ki tumhari har khwahish poori ho aur tumhari zindagi hamesha khushiyon se bhari rahe.🤞🏻✨
+Thank you meri life mein aane ke liye aur har din ko special banane ke liye. Main hamesha tumhara saath dene ki koshish karunga aur tumhe utna hi pyaar karta rahunga jitna aaj karta hoon—aur har din usse bhi zyada.
+Happy Birthday, Meri Jaan! ❤️🎉
+I love you today, tomorrow, and always. 💖✨
+            </p>
+            <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+                <span style="font-size:3rem;">🎈</span>
+                <span style="font-size:3rem;">🎁</span>
+                <span style="font-size:3rem;">🎊</span>
+                <span style="font-size:3rem;">🥂</span>
+            </div>
+            <button class="btn" id="backToStart">Back to Start</button>
         </div>
     </section>
 </div>
@@ -269,7 +292,7 @@ Aaj bas itna kehna hai ki meri zindagi tumhare bina adhuri si lagti hai. Main ha
 </audio>
 
 <script>
-    const screens = ['page1', 'page2', 'page3', 'page4'];
+    const screens = ['page1', 'page2', 'page3', 'page4', 'page5'];
     const navButtons = document.querySelectorAll('.nav-btn');
     const bgAudio = document.getElementById('bgAudio');
     let galleryIndex = 0;
@@ -394,6 +417,8 @@ Aaj bas itna kehna hai ki meri zindagi tumhare bina adhuri si lagti hai. Main ha
             bgAudio.currentTime = 0;
             showScreen('page1');
         });
+        document.getElementById('toBirthday').addEventListener('click', () => showScreen('page5'));
+        document.getElementById('backToStart').addEventListener('click', () => showScreen('page1'));
     }
 
     window.addEventListener('DOMContentLoaded', () => {
