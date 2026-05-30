@@ -1,0 +1,408 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Surprise Box ❤️</title>
+<style>
+    :root {
+        --bg: #fff1f5;
+        --surface: rgba(255, 255, 255, 0.96);
+        --accent: #b71c46;
+        --accent-dark: #7d1430;
+        --gold: #d4af37;
+        --text: #4f2331;
+        --soft: #ffdde6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+    body {
+        font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+        background: radial-gradient(circle at top left, rgba(255, 215, 153, 0.2), transparent 30%),
+                    linear-gradient(180deg, #ffe6ec 0%, #fff6f9 45%, #fff 100%);
+        color: var(--text);
+        overflow-x: hidden;
+    }
+
+    .app {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 24px;
+    }
+
+    .page-nav {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: 8px;
+        z-index: 20;
+    }
+
+    .nav-btn {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(183, 28, 70, 0.15);
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--accent-dark);
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.3s ease, color 0.3s ease;
+        font-weight: 600;
+    }
+
+    .nav-btn:hover { transform: translateY(-1px); }
+    .nav-btn.active { background: linear-gradient(90deg, #ffe9b3, #ffd0da); color: var(--accent); }
+
+    .screen {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.45s ease, transform 0.45s ease;
+        transform: translateY(16px);
+    }
+
+    .screen.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+    .card {
+        width: min(100%, 960px);
+        background: var(--surface);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 24px 60px rgba(196, 29, 95, 0.12);
+        border: 1px solid rgba(255, 220, 230, 0.8);
+    }
+
+    .title {
+        font-size: clamp(2rem, 2.5vw, 2.4rem);
+        color: var(--accent);
+        text-align: center;
+        margin-bottom: 22px;
+    }
+
+    .gift-wrap, .letter-wrap, .gallery-wrap, .feature-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .gift {
+        width: 230px;
+        height: 230px;
+        border-radius: 28px;
+        background: linear-gradient(180deg, #ff8aa5, #e81f6e);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 20px 45px rgba(204, 37, 101, 0.2);
+        transition: transform 0.4s ease;
+    }
+
+    .gift:hover { transform: translateY(-6px); }
+    .gift__ribbon { position: absolute; width: 60px; height: 200px; left: 50%; top: 15px; transform: translateX(-50%); background: rgba(255,255,255,0.92); border-radius: 10px; }
+    .gift__bow { position: absolute; width: 120px; height: 56px; background: linear-gradient(90deg, #fff2f8, #ffd5df); border-radius: 999px; top: -28px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 28px; transition: transform 0.7s ease; }
+    .gift.open .gift__bow { transform: translateX(-50%) scale(0.05) rotate(-10deg); }
+
+    .envelope {
+        width: 420px;
+        max-width: 100%;
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: 0 18px 50px rgba(136, 0, 52, 0.12);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .envelope__flap {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -26px;
+        height: 110px;
+        background: linear-gradient(180deg, #ffeef6, #ffd9e8);
+        border-radius: 18px;
+        transform-origin: top center;
+        transform: rotateX(0deg);
+        transition: transform 0.9s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        font-weight: 700;
+    }
+
+    .envelope.open .envelope__flap { transform: rotateX(180deg); }
+    .letter { padding: 28px; min-height: 220px; opacity: 0; transform: translateY(16px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .envelope.show .letter { opacity: 1; transform: translateY(0); }
+    .letter p { margin-bottom: 1rem; line-height: 1.7; color: var(--text); }
+
+    .btn {
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(90deg, #ff7fa6, #ff3a78);
+        color: white;
+        padding: 12px 18px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(255, 101, 150, 0.2); }
+    .btn--ghost { background: rgba(255,255,255,0.95); color: var(--accent); border: 1px solid rgba(183, 28, 70, 0.18); }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+
+    .gallery-layout { display: grid; grid-template-columns: minmax(200px, 1fr) auto minmax(200px, 1fr); gap: 18px; width: 100%; align-items: center; }
+    .gal-card { background: white; border-radius: 18px; padding: 14px; box-shadow: 0 18px 40px rgba(163, 38, 84, 0.12); display: flex; align-items: center; justify-content: center; }
+    .gal-card img { width: 100%; height: auto; max-height: 60vh; border-radius: 16px; object-fit: cover; }
+
+    .thumbs { width: 100%; display: flex; gap: 10px; overflow-x: auto; padding: 6px 0; }
+    .thumbs img { width: 96px; height: 70px; object-fit: cover; border-radius: 12px; cursor: pointer; opacity: 0.9; border: 3px solid transparent; transition: transform 0.2s ease, border-color 0.2s ease; }
+    .thumbs img.active { border-color: var(--gold); transform: translateY(-4px); }
+
+    .feature-photo { width: min(100%, 720px); height: min(62vh, 520px); border-radius: 20px; overflow: hidden; box-shadow: 0 24px 70px rgba(126, 16, 60, 0.2); position: relative; }
+    .feature-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .feature-overlay { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding: 28px; background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.35) 100%); color: white; font-size: 1.1rem; text-align: center; }
+
+    @media (max-width: 840px) {
+        .page-nav { top: 12px; right: 12px; flex-wrap: wrap; justify-content: center; }
+        .gallery-layout { grid-template-columns: 1fr; }
+        .gal-card img { max-height: 300px; }
+        .feature-photo { height: 44vh; }
+        .envelope { width: 100%; }
+    }
+
+    @media (max-width: 560px) {
+        .card { padding: 20px; }
+        .gift { width: 200px; height: 200px; }
+        .gift__bow { width: 100px; height: 46px; font-size: 24px; }
+        .title { font-size: 1.8rem; }
+        .thumbs img { width: 80px; height: 62px; }
+        .feature-overlay { padding: 18px; font-size: 1rem; }
+    }
+</style>
+</head>
+<body>
+<div class="app">
+    <nav class="page-nav">
+        <button class="nav-btn active" data-target="page1">Page 1</button>
+        <button class="nav-btn" data-target="page2">Page 2</button>
+        <button class="nav-btn" data-target="page3">Page 3</button>
+        <button class="nav-btn" data-target="page4">Page 4</button>
+    </nav>
+
+    <section class="screen active" id="page1">
+        <div class="card gift-wrap">
+            <h1 class="title">A Special Surprise For You ❤️</h1>
+            <div class="gift" id="gift">
+                <div class="gift__ribbon"></div>
+                <div class="gift__bow">✨</div>
+            </div>
+            <p style="color: var(--accent-dark); font-weight: 700; margin-top: 12px; text-align:center;">Tap the surprise box to reveal your journey.</p>
+        </div>
+    </section>
+
+    <section class="screen" id="page2">
+        <div class="card letter-wrap">
+            <h1 class="title">Love Letter</h1>
+            <div class="envelope" id="envelope">
+                <div class="envelope__flap">To My Love</div>
+                <div class="letter" id="letter">
+                    <p>My dearest,</p>
+                    <p>Every moment with you is my favorite memory. You are my laughter on cloudy days, my comfort when I'm weary, and my reason to dream bigger. I love you more than words can hold.</p>
+                    <p>Forever yours,</p>
+                    <p><strong>❤️</strong></p>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="btn" id="nextToGallery">Next</button>
+                <button class="btn" id="musicToggle">Play Music</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="screen" id="page3">
+        <div class="card gallery-wrap">
+            <h1 class="title">Photo Gallery</h1>
+            <div class="gallery-layout">
+                <button class="btn" id="prevPic">Previous</button>
+                <div class="gal-card"><img id="mainPic" src="assets/WhatsApp%20Image%202026-05-30%20at%202.12.39%20PM%20(1).jpeg" alt="Gallery photo"></div>
+                <button class="btn" id="nextPic">Next</button>
+            </div>
+            <div class="thumbs" id="thumbs"></div>
+            <div class="controls">
+                <button class="btn" id="prevToFeature">Previous</button>
+                <button class="btn" id="toFeature">Next</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="screen" id="page4">
+        <div class="card feature-wrap">
+            <h1 class="title">Photo + Song</h1>
+            <div class="feature-photo">
+                <img id="featureImg" src="assets/WhatsApp%20Image%202026-05-30%20at%202.12.42%20PM.jpeg" alt="Featured photo">
+                <div class="feature-overlay">You are my favorite person, my greatest blessing, and my forever love ❤️</div>
+            </div>
+            <div class="controls">
+                <button class="btn" id="playPause">Play</button>
+                <button class="btn" id="muteUnmute">Mute</button>
+                <button class="btn" id="replay">Replay</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<audio id="bgAudio" loop preload="auto">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const screens = ['page1', 'page2', 'page3', 'page4'];
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const bgAudio = document.getElementById('bgAudio');
+    let galleryIndex = 0;
+    const images = [
+        'assets/WhatsApp%20Image%202026-05-30%20at%202.12.39%20PM%20(1).jpeg',
+        'assets/WhatsApp%20Image%202026-05-30%20at%202.12.39%20PM.jpeg',
+        'assets/WhatsApp%20Image%202026-05-30%20at%202.12.40%20PM%20(1).jpeg',
+        'assets/WhatsApp%20Image%202026-05-30%20at%202.12.40%20PM%20(2).jpeg',
+        'assets/WhatsApp%20Image%202026-05-30%20at%202.12.40%20PM.jpeg',
+        'assets/WhatsApp%20Image%202026-05-30%20at%202.12.41%20PM%20(1).jpeg',
+        'assets/WhatsApp%20Image%202026-05-30%20at%202.12.41%20PM.jpeg',
+        'assets/WhatsApp%20Image%202026-05-30%20at%202.12.42%20PM%20(1).jpeg',
+        'assets/WhatsApp%20Image%202026-05-30%20at%202.12.42%20PM.jpeg'
+    ];
+
+    function showScreen(id) {
+        screens.forEach(screen => {
+            document.getElementById(screen).classList.toggle('active', screen === id);
+        });
+        navButtons.forEach(button => {
+            button.classList.toggle('active', button.dataset.target === id);
+        });
+        if (id === 'page1') {
+            const gift = document.getElementById('gift');
+            gift.classList.remove('open');
+            document.querySelector('.gift__bow').style.transform = 'translateX(-50%) scale(1)';
+        }
+        if (id === 'page2') {
+            const env = document.getElementById('envelope');
+            env.classList.add('open');
+            setTimeout(() => env.classList.add('show'), 650);
+        }
+        if (id === 'page4') {
+            document.getElementById('featureImg').src = images[galleryIndex];
+        }
+    }
+
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => showScreen(button.dataset.target));
+    });
+
+    function initGift() {
+        const gift = document.getElementById('gift');
+        gift.addEventListener('click', () => {
+            gift.classList.add('open');
+            document.querySelector('.gift__bow').style.transform = 'translateX(-50%) scale(0.05) rotate(-10deg)';
+            setTimeout(() => showScreen('page2'), 400);
+            setTimeout(() => {
+                const env = document.getElementById('envelope');
+                env.classList.add('open');
+                setTimeout(() => env.classList.add('show'), 600);
+            }, 400);
+        });
+    }
+
+    function initEnvelope() {
+        document.getElementById('nextToGallery').addEventListener('click', () => showScreen('page3'));
+        document.getElementById('musicToggle').addEventListener('click', () => {
+            if (bgAudio.paused) {
+                bgAudio.play().catch(() => {});
+                document.getElementById('musicToggle').textContent = 'Pause Music';
+            } else {
+                bgAudio.pause();
+                document.getElementById('musicToggle').textContent = 'Play Music';
+            }
+        });
+    }
+
+    function updateGallery() {
+        const mainPic = document.getElementById('mainPic');
+        mainPic.src = images[galleryIndex];
+        document.querySelectorAll('.thumbs img').forEach((thumb, index) => {
+            thumb.classList.toggle('active', index === galleryIndex);
+        });
+    }
+
+    function initGallery() {
+        const thumbs = document.getElementById('thumbs');
+        images.forEach((src, index) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = 'Gallery thumb';
+            img.addEventListener('click', () => {
+                galleryIndex = index;
+                updateGallery();
+            });
+            thumbs.appendChild(img);
+        });
+        document.getElementById('prevPic').addEventListener('click', () => {
+            galleryIndex = (galleryIndex - 1 + images.length) % images.length;
+            updateGallery();
+        });
+        document.getElementById('nextPic').addEventListener('click', () => {
+            galleryIndex = (galleryIndex + 1) % images.length;
+            updateGallery();
+        });
+        document.getElementById('prevToFeature').addEventListener('click', () => showScreen('page2'));
+        document.getElementById('toFeature').addEventListener('click', () => showScreen('page4'));
+        updateGallery();
+    }
+
+    function initFeature() {
+        const playPause = document.getElementById('playPause');
+        const muteUnmute = document.getElementById('muteUnmute');
+        const replay = document.getElementById('replay');
+
+        playPause.addEventListener('click', () => {
+            if (bgAudio.paused) {
+                bgAudio.play().catch(() => {});
+                playPause.textContent = 'Pause';
+            } else {
+                bgAudio.pause();
+                playPause.textContent = 'Play';
+            }
+        });
+
+        muteUnmute.addEventListener('click', () => {
+            bgAudio.muted = !bgAudio.muted;
+            muteUnmute.textContent = bgAudio.muted ? 'Unmute' : 'Mute';
+        });
+
+        replay.addEventListener('click', () => {
+            bgAudio.pause();
+            bgAudio.currentTime = 0;
+            showScreen('page1');
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        initGift();
+        initEnvelope();
+        initGallery();
+        initFeature();
+        showScreen('page1');
+    });
+</script>
+</body>
+</html>
